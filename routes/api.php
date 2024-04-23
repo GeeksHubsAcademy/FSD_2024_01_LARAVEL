@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,22 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/tasks', function () {
-    return 'GET ALL TASKS';
-});
-
-Route::post('/tasks', function (Request $request) {
-    dump($request->input('title'));
-
-    $title = $request->input('title');
-
-    return 'CREATE TASK';
-});
-
-Route::put('/tasks/{id}', function ($id) {
-    return 'update TASK ' . $id;
-});
-
-Route::delete('/tasks/{id}', function ($id) {
-    return 'delete TASK' . $id;
-});
+// TASKS
+Route::get('/tasks', [TaskController::class, 'getAllTasks']);
+Route::post('/tasks', [TaskController::class, 'createTask']);
+Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById']);
+Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById']);
