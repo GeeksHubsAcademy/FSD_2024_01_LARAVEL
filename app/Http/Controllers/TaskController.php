@@ -36,7 +36,7 @@ class TaskController extends Controller
     {
         try {
             $task = new Task;
-            $task->title = $request->input('title');
+            $task->title = $request('title');
             $task->description = $request->input('description');
             $task->user_id = $request->input('user_id');
 
@@ -70,6 +70,26 @@ class TaskController extends Controller
 
     public function deleteTaskById($id)
     {
-        return 'delete TASK' . $id;
+        try {
+            $taskDeleted = Task::destroy($id);
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Tasks deleted successfully",
+                    "data" => $taskDeleted      
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Tasks cant be deleted task",
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
     }
 }
