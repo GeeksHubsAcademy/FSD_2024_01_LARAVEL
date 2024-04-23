@@ -34,9 +34,33 @@ class TaskController extends Controller
 
     public function createTask(Request $request)
     {
-        $title = $request->input('title');
+        try {
+            $task = new Task;
+            $task->title = $request->input('title');
+            $task->description = $request->input('description');
+            $task->user_id = $request->input('user_id');
 
-        return 'CREATE TASK';
+            $task->save();
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Tasks created successfully",
+                    "data" => $task      
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Tasks cant be created task",
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
+
     }
 
     public function updateTaskById($id)
