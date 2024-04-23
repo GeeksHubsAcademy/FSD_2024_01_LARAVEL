@@ -63,9 +63,51 @@ class TaskController extends Controller
 
     }
 
-    public function updateTaskById($id)
+    public function updateTaskById(Request $request, $id)
     {
-        return 'update TASK ' . $id;
+        try {
+            $taskId = $id;
+
+            $taskTitle = $request->input('title');
+            $taskDescription = $request->input('description');
+            $taskStatus = $request->input('status');
+
+            $task = Task::find($taskId);
+
+            // validar que existe la tarea
+
+            if( $taskTitle ){
+                $task->title = $taskTitle;
+            }
+
+            if( $taskStatus) {
+                $task->status = $taskStatus;
+            }
+            
+            if( $taskDescription) {
+                $task->description = $taskDescription;
+            }    
+
+            $task->save();
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Tasks deleted successfully",
+                    "data" => $task   
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Tasks cant be updated",
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
     }
 
     public function deleteTaskById($id)
