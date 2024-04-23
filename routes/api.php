@@ -21,3 +21,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/tasks', function () {
+    return 'GET ALL TASKS';
+});
+
+Route::post('/tasks', function (Request $request) {
+    dump($request->input('title'));
+
+    $title = $request->input('title');
+
+    return 'CREATE TASK';
+});
+
+Route::put('/tasks/{id}', function ($id) {
+    return 'update TASK ' . $id;
+});
+
+Route::delete('/tasks/{id}', function ($id) {
+    return 'delete TASK' . $id;
+});
