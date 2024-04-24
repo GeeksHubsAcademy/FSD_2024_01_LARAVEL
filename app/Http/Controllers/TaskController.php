@@ -10,13 +10,16 @@ class TaskController extends Controller
     public function getAllTasks()
     {
         try {
-            $tasks = Task::all();
+            $tasks = Task::query()
+                ->select('id', 'title', 'description')
+                ->where('user_id', auth()->user()->id)
+                ->get();
 
             return response()->json(
                 [
                     "success" => true,
                     "message" => "Tasks retrieved successfully",
-                    "data" => $tasks        
+                    "data" => $tasks
                 ],
                 200
             );
@@ -36,9 +39,9 @@ class TaskController extends Controller
     {
         try {
             $task = new Task;
-            $task->title = $request('title');
+            $task->title = $request->input('title');
             $task->description = $request->input('description');
-            $task->user_id = $request->input('user_id');
+            $task->user_id = auth()->user()->id;
 
             $task->save();
 
@@ -46,7 +49,7 @@ class TaskController extends Controller
                 [
                     "success" => true,
                     "message" => "Tasks created successfully",
-                    "data" => $task      
+                    "data" => $task
                 ],
                 200
             );
@@ -60,7 +63,6 @@ class TaskController extends Controller
                 500
             );
         }
-
     }
 
     public function updateTaskById(Request $request, $id)
@@ -76,17 +78,17 @@ class TaskController extends Controller
 
             // validar que existe la tarea
 
-            if( $taskTitle ){
+            if ($taskTitle) {
                 $task->title = $taskTitle;
             }
 
-            if( $taskStatus) {
+            if ($taskStatus) {
                 $task->status = $taskStatus;
             }
-            
-            if( $taskDescription) {
+
+            if ($taskDescription) {
                 $task->description = $taskDescription;
-            }    
+            }
 
             $task->save();
 
@@ -94,7 +96,7 @@ class TaskController extends Controller
                 [
                     "success" => true,
                     "message" => "Tasks deleted successfully",
-                    "data" => $task   
+                    "data" => $task
                 ],
                 200
             );
@@ -119,7 +121,7 @@ class TaskController extends Controller
                 [
                     "success" => true,
                     "message" => "Tasks deleted successfully",
-                    "data" => $taskDeleted      
+                    "data" => $taskDeleted
                 ],
                 200
             );

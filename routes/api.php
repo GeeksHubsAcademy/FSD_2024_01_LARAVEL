@@ -25,10 +25,10 @@ Route::get('/', function () {
 });
 
 // TASKS
-Route::get('/tasks', [TaskController::class, 'getAllTasks']);
-Route::post('/tasks', [TaskController::class, 'createTask']);
-Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById']);
-Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById']);
+Route::get('/tasks', [TaskController::class, 'getAllTasks'])->middleware('auth:sanctum');
+Route::post('/tasks', [TaskController::class, 'createTask'])->middleware('auth:sanctum');
+Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById'])->middleware('auth:sanctum');
+Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById'])->middleware('auth:sanctum');
 
 // AUTH
 Route::post('/register', [AuthController::class, 'register']);
