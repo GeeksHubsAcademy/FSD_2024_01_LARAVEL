@@ -25,14 +25,17 @@ Route::get('/', function () {
 });
 
 // TASKS
-Route::get('/tasks', [TaskController::class, 'getAllTasks'])->middleware('auth:sanctum');
-Route::post('/tasks', [TaskController::class, 'createTask'])->middleware('auth:sanctum');
-Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById'])->middleware('auth:sanctum');
-Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById'])->middleware('auth:sanctum');
+Route::group([
+    'middleware' => ['auth:sanctum']
+], function () {
+    Route::get('/tasks', [TaskController::class, 'getAllTasks']);
+    Route::post('/tasks', [TaskController::class, 'createTask']);
+    Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById']);
+    Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById']);
+});
 
 // AUTH
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('ejemplo');
 
-
-
+Route::get('/me', [AuthController::class, 'getProfile'])->middleware('auth:sanctum');
