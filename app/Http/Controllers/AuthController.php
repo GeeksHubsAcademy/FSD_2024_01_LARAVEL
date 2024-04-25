@@ -27,7 +27,7 @@ class AuthController extends Controller
                 'password' => 'required|min:4|max:10',
                 'email' => 'required|unique:users'
             ]);
-     
+
             if ($validator->fails()) {
                 return response()->json(
                     [
@@ -73,18 +73,19 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         try {
             // recuperar la request
             $email = $request->input('email');
             $password = $request->input('password');
 
-               // Validarla
+            // Validarla
             $validator = Validator::make($request->all(), [
                 'password' => 'required',
                 'email' => 'required'
             ]);
-     
+
             if ($validator->fails()) {
                 return response()->json(
                     [
@@ -100,7 +101,7 @@ class AuthController extends Controller
                 ->where('email', $email)
                 ->first();
 
-            if(!$user) {
+            if (!$user) {
                 return response()->json(
                     [
                         "success" => false,
@@ -113,8 +114,8 @@ class AuthController extends Controller
 
             // Validar password con el usuario
             $checkPasswordUser = Hash::check($password, $user->password);
-            
-            if(!$checkPasswordUser) {
+
+            if (!$checkPasswordUser) {
                 return response()->json(
                     [
                         "success" => false,
@@ -124,9 +125,9 @@ class AuthController extends Controller
                     400
                 );
             }
-            
+
             // Crear token
-            $token =$user->createToken('api-token')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken;
 
             // Responder con el token
             return response()->json(
@@ -169,5 +170,34 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return 'token deleted';
+    }
+
+    public function getUsers(Request $request)
+    {
+        try {
+            $limit = $request->query('limit', 5);
+
+            $users = User::simplePaginate($limit);
+
+            // Responder con el token
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "user logged",
+                    "data" => $users
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "user cant be logged",
+                    // "error" => $th->getMessage()
+                ]
+            );
+        }
     }
 }

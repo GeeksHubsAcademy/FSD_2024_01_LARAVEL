@@ -11,9 +11,11 @@ class TaskController extends Controller
     {
         try {
             $tasks = Task::query()
-                ->select('id', 'title', 'description')
-                ->where('user_id', auth()->user()->id)
+                ->select('id', 'title', 'description', 'user_id')
+                // ->where('user_id', auth()->user()->id)
                 ->get();
+
+            
 
             return response()->json(
                 [

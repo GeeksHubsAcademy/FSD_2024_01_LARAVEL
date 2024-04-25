@@ -40,3 +40,5 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('ejemplo');
 
 Route::get('/me', [AuthController::class, 'getProfile'])->middleware('auth:sanctum');
 Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::get('/users', [AuthController::class, 'getUsers']);
