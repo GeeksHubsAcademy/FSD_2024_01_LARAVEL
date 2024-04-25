@@ -11,4 +11,10 @@ class Task extends Model
 
     // opativo dependiendo del nombre de la clase
     protected $table = "tasks";
+
+    public function user()
+    {
+        // return $this->belongsTo(User::class, 'user_id', 'id', 'tasks');
+        return $this->belongsTo(User::class);
+    }
 }

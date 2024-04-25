@@ -42,3 +42,7 @@ Route::get('/me', [AuthController::class, 'getProfile'])->middleware('auth:sanct
 Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/users', [AuthController::class, 'getUsers']);
+
+Route::get('/tasks/{id}', [TaskController::class, 'getTaskById']);
+
+

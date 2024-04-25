@@ -15,7 +15,7 @@ class TaskController extends Controller
                 // ->where('user_id', auth()->user()->id)
                 ->get();
 
-            
+
 
             return response()->json(
                 [
@@ -132,6 +132,31 @@ class TaskController extends Controller
                 [
                     "success" => false,
                     "message" => "Tasks cant be deleted task",
+                    "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function getTaskById(Request $request, $id)
+    {
+        try {
+            $task = Task::find($id);
+
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Task retrieved successfully",
+                    "data" => $task->user
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Task cant be retrieved",
                     "error" => $th->getMessage()
                 ],
                 500
