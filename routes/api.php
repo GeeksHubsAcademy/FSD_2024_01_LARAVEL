@@ -32,6 +32,8 @@ Route::group([
     Route::post('/tasks', [TaskController::class, 'createTask']);
     Route::put('/tasks/{id}', [TaskController::class, 'updateTaskById']);
     Route::delete('/tasks/{id}', [TaskController::class, 'deleteTaskById']);
+
+    Route::post('/tasks/add-user-to-task', [TaskController::class, 'addTaskToUser']);
 });
 
 // AUTH
@@ -44,5 +46,3 @@ Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sa
 Route::get('/users', [AuthController::class, 'getUsers']);
 
 Route::get('/tasks/{id}', [TaskController::class, 'getTaskById']);
-
-

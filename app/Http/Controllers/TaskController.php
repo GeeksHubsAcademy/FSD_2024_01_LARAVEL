@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -142,13 +143,13 @@ class TaskController extends Controller
     public function getTaskById(Request $request, $id)
     {
         try {
-            $task = Task::find($id);
+            $task = Task::with('users:id,nickname,email')->find($id);
 
             return response()->json(
                 [
                     "success" => true,
                     "message" => "Task retrieved successfully",
-                    "data" => $task->user
+                    "data" => $task
                 ],
                 200
             );
@@ -158,6 +159,42 @@ class TaskController extends Controller
                     "success" => false,
                     "message" => "Task cant be retrieved",
                     "error" => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function addTaskToUser(Request $request)
+    {
+        try {
+            // recibir el id de la tarea
+            $userId = auth()->user()->id;
+            $taskId = $request->input('task_id');
+
+            // dd($taskId);
+
+            // validarla
+            $task = Task::find($taskId);
+
+            // atacar a bd
+            $task->users()->attach($userId, ['created_at' => now(), 'updated_at' => now()]);
+
+            //devolver
+            return response()->json(
+                [
+                    "success" => true,
+                    "message" => "Task added to user",
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Task cant be added to user",
                 ],
                 500
             );
